@@ -418,8 +418,9 @@ with tab2:
 
 with tab3:
     st.markdown("### 📁 Bens e Direitos")
-    ano_ant = dados["bens_direitos"][0]["ano_anterior"] if dados["bens_direitos"] else "2024"
-    ano_base = dados["bens_direitos"][0]["ano_base"] if dados["bens_direitos"] else "2025"
+    ano_cal  = dados.get("ano_calendario") or 2025
+    ano_ant  = str(ano_cal - 1)
+    ano_base = str(ano_cal)
     st.markdown(
         f"Saldos declarados pelo informe em **31/12/{ano_ant}** e **31/12/{ano_base}**."
     )
