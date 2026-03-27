@@ -75,6 +75,9 @@ def _init_session():
             "informe_isentos":    [],
             "log_envios":         [],
         }
+        # Popula com dados de demonstração na primeira inicialização
+        from database.seed_demo import seed_demo
+        seed_demo()
 
 
 def _init_sqlite():

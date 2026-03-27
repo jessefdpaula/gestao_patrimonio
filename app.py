@@ -88,6 +88,18 @@ p, li, span, div { color: #cbd5e1; }
 
 init_db()
 
+# Banner de modo demonstração
+try:
+    if st.secrets.get("app", {}).get("modo") == "sessao":
+        st.info(
+            "⚠️ **Modo demonstração** — os dados exibidos são fictícios e existem apenas durante esta sessão. "
+            "Ao fechar ou recarregar a página, tudo é reiniciado. "
+            "Para uso real, [instale o app localmente](https://github.com/jessefdpaula/gestao_patrimonio).",
+            icon="🧪",
+        )
+except Exception:
+    pass
+
 # ─── Dialog: Fale Comigo ─────────────────────────────────────────────────────
 
 @st.dialog("✉️ Fale Comigo")
