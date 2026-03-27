@@ -17,6 +17,7 @@ Dependências: pypdf
 import re
 from .parsers import get_parser_informe, listar_parsers_informe
 from .parsers.ct01_informe import CT01InformeParser, ler_informe_ct01
+from .ai_extractor import extrair_com_ia, ia_disponivel
 
 try:
     from pypdf import PdfReader
@@ -104,13 +105,23 @@ def ler_informe_rendimentos(caminho_pdf: str) -> dict:
     ano_ant  = anos[0] if len(anos) >= 1 else str((resultado["ano_calendario"] or 2025) - 1)
     ano_base = anos[1] if len(anos) >= 2 else str(resultado["ano_calendario"] or 2025)
 
+    # ── CT01: anotações FreeText — leitura especial antes de tudo ────────────
     parser = get_parser_informe(texto)
-    resultado["parser_usado"] = parser.NOME
-
-    # CT01 requer leitura das anotações — não pode ser feito pelo parsear() genérico
     if parser is CT01InformeParser:
         return ler_informe_ct01(caminho_pdf)
 
+    # ── Tentativa 1: IA (Groq / Llama 3) ─────────────────────────────────────
+    if ia_disponivel():
+        resultado_ia = extrair_com_ia(texto)
+        if resultado_ia:
+            # Preserva texto_bruto e ano extraído via regex (mais confiável)
+            resultado_ia["texto_bruto"]    = texto
+            resultado_ia["ano_calendario"] = resultado_ia.get("ano_calendario") or resultado["ano_calendario"]
+            resultado_ia["parser_usado"]   = "🤖 " + resultado_ia.get("parser_usado", "IA — Groq / Llama 3.3")
+            return resultado_ia
+
+    # ── Tentativa 2: parsers regex por banco (fallback) ───────────────────────
+    resultado["parser_usado"] = parser.NOME
     try:
         dados = parser.parsear(texto, ano_ant=ano_ant, ano_base=ano_base)
         resultado.update(dados)
