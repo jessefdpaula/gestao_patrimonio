@@ -28,10 +28,10 @@ CODIGOS_IRPF = {
     "CRIPTO":    {"grupo": "08", "codigo": "01", "desc": "Criptoativos (Bitcoin, Ethereum, etc.)"},
 }
 
-# Corretora padrão da NuInvest
+# Corretora padrão — configure com o CNPJ da sua corretora principal
 CORRETORA_PADRAO = {
-    "nome": "Nu Investimentos S.A.",
-    "cnpj": "62.169.875/0001-79"
+    "nome": "Minha Corretora",
+    "cnpj": ""
 }
 
 
