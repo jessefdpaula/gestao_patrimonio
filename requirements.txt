@@ -1,0 +1,27 @@
+# ═══════════════════════════════════════════════
+# App de Controle de Patrimônio — Dependências
+# ═══════════════════════════════════════════════
+
+# Interface
+streamlit>=1.35.0
+
+# Leitura de PDF (notas de negociação)
+pypdf>=4.0.0
+
+# Web scraping
+selenium>=4.20.0
+webdriver-manager>=4.0.0   # Instala o ChromeDriver automaticamente
+requests>=2.31.0
+
+# Cotações em tempo real (Yahoo Finance)
+yfinance>=0.2.40
+
+# Dados e visualização
+pandas>=2.0.0
+plotly>=5.18.0
+
+# Utilitários
+python-dateutil>=2.8.2
+
+# Envio de e-mail (Resend)
+resend>=2.0.0

@@ -1,0 +1,45 @@
+# Dados sensíveis e banco de dados
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# Secrets (NUNCA commitar)
+.streamlit/secrets.toml
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Ambientes virtuais
+venv/
+env/
+.env
+.venv
+ebcli-venv/
+
+# PDFs de documentos pessoais
+*.pdf
+
+# IDEs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
