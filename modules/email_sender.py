@@ -129,3 +129,52 @@ def enviar_copia(nome: str, email_destino: str, secrets) -> tuple[bool, str]:
             pass  # falha na notificação não bloqueia o envio principal
 
     return True, "E-mail enviado com sucesso!"
+
+
+def enviar_contato(nome: str, email_remetente: str, mensagem: str, secrets) -> tuple[bool, str]:
+    """
+    Encaminha mensagem de contato para o dono do app via Resend.
+    Retorna (sucesso: bool, mensagem: str).
+    """
+    if resend is None:
+        return False, "Pacote 'resend' não instalado. Execute: pip install resend"
+
+    try:
+        cfg = secrets["email"]
+        resend.api_key = cfg["resend_api_key"]
+        from_address = cfg.get("from_address", "onboarding@resend.dev")
+        from_name    = cfg.get("from_name", "Gestão de Patrimônio")
+        owner_email  = cfg.get("owner_email", "")
+    except KeyError as e:
+        return False, f"Chave ausente em secrets.toml: {e}"
+
+    if not owner_email:
+        return False, "owner_email não configurado em secrets.toml"
+
+    html = f"""
+<html>
+<body style="font-family:'Segoe UI',Arial,sans-serif;background:#f8fafc;padding:32px;">
+  <div style="max-width:560px;margin:auto;background:#fff;border-radius:12px;
+              padding:32px;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+    <h2 style="color:#1e3a5f;margin-bottom:4px;">✉️ Nova mensagem — Gestão de Patrimônio</h2>
+    <p><strong>De:</strong> {nome} &lt;{email_remetente}&gt;</p>
+    <p><strong>Data:</strong> {datetime.now().strftime('%d/%m/%Y às %H:%M')}</p>
+    <hr style="border:none;border-top:1px solid #e2e8f0;margin:16px 0;">
+    <p style="color:#1e293b;white-space:pre-wrap;">{mensagem}</p>
+  </div>
+</body>
+</html>
+""".strip()
+
+    try:
+        resend.Emails.send({
+            "from":     f"{from_name} <{from_address}>",
+            "to":       [owner_email],
+            "reply_to": email_remetente,
+            "subject":  f"[Patrimônio App] Mensagem de {nome}",
+            "html":     html,
+        })
+    except Exception as e:
+        return False, f"Erro ao enviar: {e}"
+
+    return True, "Mensagem enviada com sucesso!"

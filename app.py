@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 import re
 import streamlit as st
 from database.db import init_db, registrar_envio_app
-from modules.email_sender import enviar_copia
+from modules.email_sender import enviar_contato
 
 st.set_page_config(
     page_title="Patrimônio",
@@ -88,41 +88,49 @@ p, li, span, div { color: #cbd5e1; }
 
 init_db()
 
-# ─── Dialog: Solicitar cópia ──────────────────────────────────────────────────
+# ─── Dialog: Fale Comigo ─────────────────────────────────────────────────────
 
-@st.dialog("📦 Solicitar uma cópia do app")
-def dialog_solicitar_copia():
+@st.dialog("✉️ Fale Comigo")
+def dialog_contato():
     st.markdown(
-        "Preencha seus dados e enviaremos o código-fonte completo do app "
-        "diretamente no seu e-mail."
+        "Tem dúvidas, sugestões ou quer colaborar com o projeto? "
+        "Manda uma mensagem! 😊"
     )
     st.divider()
 
-    nome  = st.text_input("Seu nome *", placeholder="Ex: João Silva")
-    email = st.text_input("Seu e-mail *", placeholder="joao@email.com")
+    nome     = st.text_input("Seu nome *", placeholder="Ex: João Silva")
+    email    = st.text_input("Seu e-mail *", placeholder="joao@email.com")
+    mensagem = st.text_area("Mensagem *", placeholder="Escreva sua mensagem aqui...", height=130)
 
+    st.markdown(
+        "<small>🔗 O código-fonte do projeto está disponível no "
+        "<a href='https://github.com/jessefdpaula/gestao_patrimonio' target='_blank' style='color:#3b82f6;'>GitHub</a>.</small>",
+        unsafe_allow_html=True,
+    )
     st.markdown("<br>", unsafe_allow_html=True)
     col1, col2 = st.columns(2)
 
     with col1:
-        if st.button("📨 Solicitar", type="primary", use_container_width=True):
-            # Validações
+        if st.button("📨 Enviar", type="primary", use_container_width=True):
             if not nome.strip():
                 st.error("Informe seu nome.")
                 return
             if not email.strip() or not re.match(r"[^@]+@[^@]+\.[^@]+", email):
                 st.error("Informe um e-mail válido.")
                 return
+            if not mensagem.strip():
+                st.error("Escreva uma mensagem.")
+                return
 
             with st.spinner("Enviando..."):
-                ok, msg = enviar_copia(nome.strip(), email.strip(), st.secrets)
+                ok, msg = enviar_contato(nome.strip(), email.strip(), mensagem.strip(), st.secrets)
 
-            registrar_envio_app("enviado" if ok else "erro")
+            registrar_envio_app("contato_ok" if ok else "contato_erro")
 
             if ok:
-                st.success(f"✅ Enviado para **{email}**! Verifique sua caixa de entrada.")
+                st.success("✅ Mensagem enviada! Responderei em breve.")
             else:
-                st.error(f"❌ Não foi possível enviar. Tente novamente mais tarde.\n\n*(Detalhe: {msg})*")
+                st.error(f"❌ Não foi possível enviar. Tente mais tarde.\n\n*(Detalhe: {msg})*")
 
     with col2:
         if st.button("Cancelar", use_container_width=True):
@@ -166,8 +174,10 @@ with st.sidebar:
     }
     </style>
     """, unsafe_allow_html=True)
+    st.link_button("⭐  Ver no GitHub", "https://github.com/jessefdpaula/gestao_patrimonio", use_container_width=True)
+    st.markdown("<br>", unsafe_allow_html=True)
     with st.container(key="solicitar-btn"):
-        if st.button("📦 Solicitar uma cópia", use_container_width=True):
-            dialog_solicitar_copia()
+        if st.button("✉️ Fale Comigo", use_container_width=True):
+            dialog_contato()
 
 pg.run()
