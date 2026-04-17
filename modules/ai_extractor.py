@@ -158,7 +158,18 @@ def _formatar_resultado(dados: dict) -> dict:
             "saldo_anterior": float(b.get("saldo_anterior") or 0),
             "saldo_base":     float(b.get("saldo_base") or 0),
         })
-
+      
+    # Criptomoedas
+    for c in dados.get("criptomoedas") or []:
+      resultado["criptomoedas"].append({
+          "nome":                  c.get("nome", ""),
+          "ticker":                c.get("ticker", ""),
+          "data":                  c.get("data", ""),
+          "quantidade":            float(c.get("quantidade") or 0),
+          "saldo_reais":           float(c.get("saldo_reais") or 0),
+          "custo_medio_aquisicao": float(c.get("custo_medio_aquisicao") or 0),
+        })
+  
     resultado["total_tributavel"] = sum(r["valor"] for r in resultado["rendimentos_tributaveis"])
     resultado["total_isento"]     = sum(r["valor"] for r in resultado["rendimentos_isentos"])
 
