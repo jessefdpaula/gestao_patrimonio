@@ -429,12 +429,12 @@ with tab3:
         st.info("Nenhum bem ou direito encontrado neste informe.")
     else:
         df_bens = pd.DataFrame([{
-            "Grupo": b["grupo"],
-            "Código/Tipo": b["codigo_tipo"],
-            "Especificação": b["especificacao"],
-            "CNPJ": b["cnpj"] or "—",
-            f"Saldo 31/12/{ano_ant}": f"R$ {b['saldo_anterior']:,.2f}".replace(",","X").replace(".",",").replace("X","."),
-            f"Saldo 31/12/{ano_base}": f"R$ {b['saldo_base']:,.2f}".replace(",","X").replace(".",",").replace("X","."),
+            "Grupo":                          b.get("grupo", "—"),
+            "Código/Tipo":                    b.get("codigo_tipo", "—"),
+            "Especificação":                  b.get("especificacao", "—"),
+            "CNPJ":                           b.get("cnpj") or "—",
+            f"Saldo 31/12/{ano_ant}":         b.get("saldo_anterior", 0.0),
+            f"Saldo 31/12/{ano_base}":        b.get("saldo_base", 0.0),
         } for b in dados["bens_direitos"]])
 
         st.dataframe(df_bens, hide_index=True, use_container_width=True)
