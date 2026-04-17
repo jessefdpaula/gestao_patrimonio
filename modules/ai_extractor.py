@@ -67,6 +67,16 @@ Retorne EXATAMENTE este JSON (sem texto adicional):
       "saldo_anterior": 0.00,
       "saldo_base": 0.00
     }}
+  ],
+    "criptomoedas": [
+    {{
+      "nome": "nome da criptomoeda (ex: Bitcoin)",
+      "ticker": "símbolo (ex: BTC)",
+      "data": "DD/MM/AAAA",
+      "quantidade": 0.00000000,
+      "saldo_reais": 0.00,
+      "custo_medio_aquisicao": 0.00
+    }}
   ]
 }}
 
